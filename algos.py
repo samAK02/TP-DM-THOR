@@ -18,7 +18,7 @@ def main():
         while Pi <= 0:
             print("la durée de la tâche doit être positive !")
             Pi = float(input(f"Veuillez entrer la durée de la tâche {i + 1} : "))
-        P.append(duree)
+        P.append(Pi)
 
     S.append(0)
     C.append(S[0] + P[0])
@@ -34,3 +34,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
