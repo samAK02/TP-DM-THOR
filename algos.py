@@ -25,6 +25,8 @@ def main():
 
     Cmax = C[n]
 
+    print("la durée maximale du projet est de: ", Cmax)
+
 
 
 if __name__ == "__main__":
