@@ -1,0 +1,90 @@
+def lire_entrees():
+    n = int(input("Entrez le nombre de tâches : "))
+    r, p, d = [], [], []
+    for i in range(n):
+        print(f"\n tâche {i+1} :")
+        r_i = int(input("date de disponibilité r_i : "))
+        p_i = int(input("durée p_i : "))
+        d_i = int(input("date limite (deadline) d_i : "))
+        r.append(r_i)
+        p.append(p_i)
+        d.append(d_i)
+    return n, r, p, d
+
+
+def recherche_exacte(n, r, p, d):
+
+    meilleure_sequence = None
+    meilleur_cmax = float('inf')
+
+    def explorer(sequence_actuelle, temps_courant, taches_restantes):
+        
+        nonlocal meilleure_sequence, meilleur_cmax
+
+        #si toutes les tâches ont été ordo:
+        if len(taches_restantes) == 0:
+            if temps_courant < meilleur_cmax:
+            
+                meilleur_cmax = temps_courant
+                meilleure_sequence = sequence_actuelle.copy()
+                
+            return
+
+
+        #sinon on essaie chaque tâche possible comme prochaine tâche
+        
+        for i in range(len(taches_restantes)):
+            tache = taches_restantes[i]
+
+            #calcul du début et de la fin de cette tâche
+            debut = max(temps_courant, r[tache])
+            fin = debut + p[tache]
+
+            #si la tâche dépasse sa deadline, on abandonne cette branche
+            
+            if fin > d[tache]:
+                continue
+
+            #sinon on crée une nouvelle séquence et un nouvel ensemble restant
+            
+            nouvelle_sequence = sequence_actuelle.copy()
+            nouvelle_sequence.append(tache)
+
+            nouvelles_restantes = taches_restantes.copy()
+            nouvelles_restantes.pop(i)   # retirer la tâche choisie pour  actualiser la liste 
+
+            #on fait un appel récursif pour continuer l'exploration
+            explorer(nouvelle_sequence, fin, nouvelles_restantes)
+            
+
+    #on lance la recherche à partir d’une séquence vide
+    explorer([], 0, list(range(n)))
+
+    return meilleure_sequence, meilleur_cmax
+
+
+
+def main():
+    print("Ordonnancement exact 1|ri, di~|Cmax (DFS arborescent)")
+    n, r, p, d = lire_entrees()
+
+    sequence, cmax = recherche_exacte(n, r, p, d)
+
+    if sequence is None:
+        print("\n Aucun ordonnancement faisable.")
+        
+    else:
+        print("\n l'ordonnancement optimal est: :")
+        
+        for position, tache in enumerate(sequence):
+            print(f" Etape {position+1} : Tâche {tache+1} (r={r[tache]}, p={p[tache]}, d={d[tache]})")
+        print(f"\n Cmax optimal = {cmax}")
+
+
+
+
+
+
+if __name__ == "__main__":
+    
+    main()
